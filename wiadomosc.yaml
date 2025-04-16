@@ -1,10 +1,10 @@
 ---
 - name: Pokaz komunikatu na zdalnym serwerze
   hosts: all
-  become: false  # lub true, jeśli potrzebujesz roota
+  become: true  # lub true, jeśli potrzebujesz roota
   tasks:
     - name: Wyswietl komunikat
-      ansible.builtin.shell: echo "Witaj ze świata Ansible!"
+      ansible.builtin.shell: echo "Witaj ze świata Ansible!" | wall
       register: wynik
 
     - name: Pokaz wynik na lokalnym ekranie
