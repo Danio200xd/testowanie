@@ -1,12 +1,15 @@
----
-- name: Pokaz komunikatu na zdalnym serwerze
-  hosts: all
-  become: true  # lub true, jeśli potrzebujesz roota
+- name: Pokaz komunikat w terminalu i wynik w AWX
+  hosts: 10.10.8.82
+  become: yes
   tasks:
-    - name: Wyswietl komunikat
-      ansible.builtin.shell: echo "Witaj ze świata Ansible!" | wall
+    - name: Wyslij komunikat do terminala uzytkownikow
+      ansible.builtin.shell: echo "🐧 Hej! To komunikat z Ansible przez AWX." | wall
       register: wynik
 
-    - name: Pokaz wynik na lokalnym ekranie
+    - name: Pokaz wynik w logach AWX
       ansible.builtin.debug:
-        var: wynik.stdout
+        msg: |
+          ✅ Zadanie wykonane poprawnie.
+          💬 Komunikat został wysłany do terminali użytkowników.
+          🔧 Kod wyjścia: {{ wynik.rc }}
+          🧾 Stdout: {{ wynik.stdout }}
