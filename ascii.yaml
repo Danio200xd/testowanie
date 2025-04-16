@@ -1,5 +1,5 @@
 - name: Uruchom curl parrot.live i pokaż wynik w AWX
-  hosts: all
+  hosts: 10.10.8.82
   become: yes
   gather_facts: false
 
