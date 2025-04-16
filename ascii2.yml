@@ -10,4 +10,4 @@
 
     - name: Pokaz komunikat
       shell: |
-        figlet -c "Hello, world!" | wall
+        figlet -c "Siema forys" | wall
