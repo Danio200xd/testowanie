@@ -5,7 +5,7 @@
   become: true
 
   tasks:
-    - name: Wyslij zapytanie curl do ascii.live/can-you-hear-mee (timeout 5s)
+    - name: Wyslij zapytanie curl do ascii.live/can-you-hear-mee
       ansible.builtin.shell: "curl ascii.live/can-you-hear-me"
       register: wynik
       failed_when: false
