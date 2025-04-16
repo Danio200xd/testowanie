@@ -1,5 +1,5 @@
 - name: Pokaz komunikat przez wall
-  hosts: 10.10.8.82
+  hosts: all
   become: true
   tasks:
     - name: Zainstaluj figlet jeśli potrzeba
