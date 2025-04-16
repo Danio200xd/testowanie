@@ -1,15 +1,15 @@
-- name: Wyswietl ASCII z curl w AWX
-  hosts: all
+- name: Wyswietl ASCII z curl (ograniczone czasowo)
+  hosts: 10.10.8.82
   become: yes
   tasks:
-    - name: Wyslij zapytanie curl do ascii.live
-      ansible.builtin.shell: curl ascii.live/can-you-hear-me
+    - name: Wyslij zapytanie curl do ascii.live (timeout 5s)
+      ansible.builtin.shell: timeout 5 curl ascii.live/can-you-hear-me
       register: curl_output
+      ignore_errors: yes  # curl może zostać "ubity", to nie błąd
 
     - name: Pokaz wynik curl w logach AWX
       ansible.builtin.debug:
         msg: |
-          ✅ Zadanie wykonane poprawnie.
-          🛰️ Wynik polecenia curl:
+          ✅ Wynik polecenia curl:
           
-          {{ curl_output.stdout }}
+          {{ curl_output.stdout if curl_output.stdout else '❌ Brak danych (curl przerwane lub puste).' }}
