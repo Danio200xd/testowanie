@@ -1,12 +1,8 @@
 ---
 - name: Uruchomienie apt update na zdalnym serwerze
   hosts: all
-  become: true
+  become: yes
   tasks:
     - name: Wykonaj sudo apt update
-      ansible.builtin.shell: apt update
-      register: wynik_aktualizacji
-
-    - name: Pokaz wynik aktualizacji
-      ansible.builtin.debug:
-        var: wynik_aktualizacji.stdout_lines
+      apt:
+        update_cache: yes
