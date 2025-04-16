@@ -4,4 +4,4 @@
   become: yes
   tasks:
     - name: Tworzenie plików
-      ansible.builtin.shell: sudo mkdir pliki && cd pliki && sudo touch plik.txt && echo "linia 1" >> plik.txt 
+      ansible.builtin.shell: sudo mkdir pliki && cd pliki && sudo touch plik.txt && echo "linia 1" >> plik.txt && echo "docker 1" >> plik.txt && echo "docker 2" >> plik.txt && echo "ansible 1" >> plik.txt && cat plik.txt | grep "docker" > plik2.txt
