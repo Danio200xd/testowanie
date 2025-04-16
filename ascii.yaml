@@ -1,12 +1,12 @@
 ---
-- name: Wyswietl animację z parrot.live
+- name: Wyswietl animację z ascii.live/can-you-hear-me
   hosts: 10.10.8.82
   gather_facts: false
-  become: false
+  become: true
 
   tasks:
-    - name: Wyslij zapytanie curl do parrot.live (timeout 5s)
-      ansible.builtin.shell: "timeout 5 curl parrot.live"
+    - name: Wyslij zapytanie curl do ascii.live/can-you-hear-mee (timeout 5s)
+      ansible.builtin.shell: "timeout 5 curl ascii.live/can-you-hear-me"
       register: wynik
       failed_when: false
 
