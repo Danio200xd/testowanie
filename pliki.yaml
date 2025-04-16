@@ -1,0 +1,7 @@
+---
+- name: Zrób pliki na systemie i coś w nich zmień
+  hosts: 10.10.8.82
+  become: yes
+  tasks:
+    - name: Tworzenie plików
+      ansible.builtin.shell: sudo mkdir pliki && cd pliki && sudo touch plik.txt && echo "linia 1" >> plik.txt 
