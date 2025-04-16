@@ -8,11 +8,11 @@
     - name: Wyslij zapytanie curl do parrot.live (timeout 5s)
       ansible.builtin.shell: "timeout 5 curl parrot.live"
       register: wynik
-      ignore_errors: true
+      failed_when: false
 
     - name: Pokaz wynik animacji w AWX
       ansible.builtin.debug:
         msg: |
-          ➤ Stan wykonania: {{ '✅ SUKCES' if wynik.rc == 0 else '❌ BŁĄD' }}
+          ➤ Stan wykonania: {{ '✅ SUKCES (timeout)' if wynik.rc == 124 else '✅ SUKCES' if wynik.rc == 0 else '❌ BŁĄD' }}
           ➤ Odpowiedź:
           {{ wynik.stdout | default('Brak odpowiedzi z serwera') }}
