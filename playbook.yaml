@@ -1,7 +1,12 @@
 ---
-- name: Ping test
+- name: Uruchomienie apt update na zdalnym serwerze
   hosts: all
-  gather_facts: false
+  become: true
   tasks:
-    - name: pinguj hosty
-      ansible.builtin.ping:
+    - name: Wykonaj sudo apt update
+      ansible.builtin.shell: apt update
+      register: wynik_aktualizacji
+
+    - name: Pokaz wynik aktualizacji
+      ansible.builtin.debug:
+        var: wynik_aktualizacji.stdout_lines
