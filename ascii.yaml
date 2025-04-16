@@ -1,5 +1,5 @@
 - name: Wyswietl ASCII z curl w AWX
-  hosts: 10.10.8.82
+  hosts: all
   become: yes
   tasks:
     - name: Wyslij zapytanie curl do ascii.live
