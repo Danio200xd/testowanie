@@ -1,17 +1,18 @@
 ---
-- name: Uruchom animację z parrot.live
+- name: Wyswietl animację z parrot.live
   hosts: 10.10.8.82
+  gather_facts: false
   become: false
 
   tasks:
     - name: Wyslij zapytanie curl do parrot.live (timeout 5s)
-      ansible.builtin.shell: "curl parrot.live"
+      ansible.builtin.shell: "timeout 5 curl parrot.live"
       register: wynik
       ignore_errors: true
 
-    - name: Pokaz wynik w AWX
+    - name: Pokaz wynik animacji w AWX
       ansible.builtin.debug:
         msg: |
-          Zadanie zakończone: {{ 'SUKCES' if wynik.rc == 0 else 'BŁĄD' }}
-          Wynik:
-          {{ wynik.stdout | default('BRAK ODPOWIEDZI') }}
+          ➤ Stan wykonania: {{ '✅ SUKCES' if wynik.rc == 0 else '❌ BŁĄD' }}
+          ➤ Odpowiedź:
+          {{ wynik.stdout | default('Brak odpowiedzi z serwera') }}
