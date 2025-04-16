@@ -1,24 +1,17 @@
-- name: Uruchom curl parrot.live i pokaż wynik w AWX
+---
+- name: Uruchom animację z parrot.live
   hosts: 10.10.8.82
-  become: yes
-  gather_facts: false
+  become: false
 
   tasks:
-    - name: Sprawdź czy curl jest zainstalowany
-      ansible.builtin.shell: which curl
-      register: curl_check
-      changed_when: false
-      failed_when: curl_check.rc != 0
-      ignore_errors: false
+    - name: Wyslij zapytanie curl do parrot.live (timeout 5s)
+      ansible.builtin.shell: "timeout 5 curl parrot.live"
+      register: wynik
+      ignore_errors: true
 
-    - name: Pobierz animację z parrot.live z limitem czasu
-      ansible.builtin.shell: timeout 3s curl -s parrot.live
-      register: curl_output
-      changed_when: false
-
-    - name: Pokaż wynik w logach AWX
+    - name: Pokaz wynik w AWX
       ansible.builtin.debug:
         msg: |
-          🦜 Wynik curl z parrot.live:
-
-          {{ curl_output.stdout | default('❌ Brak odpowiedzi lub przerwane.') }}
+          Zadanie zakończone: {{ 'SUKCES' if wynik.rc == 0 else 'BŁĄD' }}
+          Wynik:
+          {{ wynik.stdout | default('BRAK ODPOWIEDZI') }}
