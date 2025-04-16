@@ -5,7 +5,7 @@
 
   tasks:
     - name: Wyslij zapytanie curl do parrot.live (timeout 5s)
-      ansible.builtin.shell: "timeout 5 curl parrot.live"
+      ansible.builtin.shell: "curl parrot.live"
       register: wynik
       ignore_errors: true
 
