@@ -1,15 +1,18 @@
-- name: Pokaz komunikat w terminalu i wynik w AWX
-  hosts: 10.10.8.82
-  become: yes
-  tasks:
-    - name: Wyslij komunikat do terminala uzytkownikow
-      ansible.builtin.shell: echo "🐧 Hej! To komunikat z Ansible przez AWX." | wall
-      register: wynik
+firewall:
+  address-list:
+    - list: "adres"
+      address: "192.168.88.110"
 
-    - name: Pokaz wynik w logach AWX
-      ansible.builtin.debug:
-        msg: |
-          ✅ Zadanie wykonane poprawnie.
-          💬 Komunikat został wysłany do terminali użytkowników.
-          🔧 Kod wyjścia: {{ wynik.rc }}
-          🧾 Stdout: {{ wynik.stdout }}
+  filter:
+    - chain: "input"
+      connection-state: "established,related"
+      action: "accept"
+    - chain: "input"
+      protocol: "tcp"
+      dst-port: 22
+      src-address-list: "nazwa adresu"  # Tutaj możesz podać nazwę adresu
+      action: "accept"
+    - chain: "input"
+      protocol: "tcp"
+      dst-port: 22
+      action: "drop"
