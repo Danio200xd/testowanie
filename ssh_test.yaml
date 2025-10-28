@@ -1,6 +1,6 @@
 ---
 - name: Konfiguracja firewall na Mikrotiku
-  hosts: mikrotik
+  hosts: all
   gather_facts: no
 
   tasks:
