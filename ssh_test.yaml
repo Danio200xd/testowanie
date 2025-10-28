@@ -2,7 +2,7 @@
 - name: Konfiguracja firewall na Mikrotiku
   hosts: all
   gather_facts: no
-
+  ansible_ssh_common_args: '-J user@jump_host'
   tasks:
     - name: Dodaj adres do listy
       ansible.builtin.raw: /ip firewall address-list add list=adres address=192.168.88.110
