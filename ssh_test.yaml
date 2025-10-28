@@ -1,0 +1,18 @@
+firewall:
+  address-list:
+    - list: "adres"
+      address: "192.168.88.110"
+
+  filter:
+    - chain: "input"
+      connection-state: "established,related"
+      action: "accept"
+    - chain: "input"
+      protocol: "tcp"
+      dst-port: 22
+      src-address-list: "nazwa adresu"  # Tutaj możesz podać nazwę adresu
+      action: "accept"
+    - chain: "input"
+      protocol: "tcp"
+      dst-port: 22
+      action: "drop"
