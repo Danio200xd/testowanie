@@ -1,18 +1,25 @@
-firewall:
-  address-list:
-    - list: "adres"
-      address: "192.168.88.110"
+---
+- name: Konfiguracja firewall na Mikrotiku
+  hosts: mikrotik
+  gather_facts: no
 
-  filter:
-    - chain: "input"
-      connection-state: "established,related"
-      action: "accept"
-    - chain: "input"
-      protocol: "tcp"
-      dst-port: 22
-      src-address-list: "nazwa adresu"  # Tutaj możesz podać nazwę adresu
-      action: "accept"
-    - chain: "input"
-      protocol: "tcp"
-      dst-port: 22
-      action: "drop"
+  tasks:
+    - name: Dodaj adres do listy
+      community.routeros.command:
+        commands:
+          - /ip firewall address-list add list=adres address=192.168.88.110
+
+    - name: Zezwól na połączenia established i related
+      community.routeros.command:
+        commands:
+          - /ip firewall filter add chain=input connection-state=established,related action=accept
+
+    - name: Zezwól na SSH tylko z określonej listy adresów
+      community.routeros.command:
+        commands:
+          - /ip firewall filter add chain=input protocol=tcp dst-port=22 src-address-list="nazwa adresu" action=accept
+
+    - name: Zablokuj pozostałe połączenia SSH
+      community.routeros.command:
+        commands:
+          - /ip firewall filter add chain=input protocol=tcp dst-port=22 action=drop
