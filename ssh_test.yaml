@@ -1,9 +1,7 @@
 ---
-- name: Konfiguracja firewall na Mikrotiku
-  hosts: all
+- name: Konfiguracja firewall na Mikrotikach
+  hosts: all          # obejmuje wszystkie hosty z inventory
   gather_facts: no
-  become: no
-
   tasks:
     - name: Dodaj adres do listy
       raw: /ip firewall address-list add list=adres address=192.168.88.110
