@@ -1,28 +1,19 @@
-- name: Konfiguracja firewall na Mikrotikach przez SSH (expect)
-  hosts: all
-  connection: local       # <-- kluczowe!
+---
+- name: Konfiguracja firewall na Mikrotikach
+  hosts: all          # obejmuje wszystkie hosty z inventory
   gather_facts: no
-  vars:
-    mikrotik_user: admin
-    mikrotik_pass: "JC3WROCN4W"
-    expect_timeout: 30
-
   tasks:
-    - name: Wykonaj serię poleceń RouterOS przez SSH używając expect
-      expect:
-        command: ssh -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null {{ mikrotik_user }}@{{ inventory_hostname }}
-        responses:
-          'assword:': "{{ mikrotik_pass }}"
-          '\[.*\]\s*>': |
-            /ip firewall address-list add list=adres address=192.168.88.110
-            /ip firewall address-list add list=adres address=11.11.11.12
-            /ip firewall filter add chain=input connection-state=established,related action=accept
-            /ip firewall filter add chain=input protocol=tcp dst-port=22 src-address-list=adres action=accept
-            /ip firewall filter add chain=input protocol=tcp dst-port=22 action=drop
-            quit
-        timeout: "{{ expect_timeout }}"
-      register: expect_out
+    - name: Dodaj adres do listy
+      /ip firewall address-list add list=adres address=192.168.88.110
 
-    - name: Pokaż wynik (opcjonalnie)
-      debug:
-        var: expect_out.stdout_lines
+    - name: Dodaj drugi adres do listy
+      /ip firewall address-list add list=adres address=11.11.11.12
+
+    - name: Akceptuj połączenia established i related
+      /ip firewall filter add chain=input connection-state=established,related action=accept
+
+    - name: Akceptuj SSH tylko z listy adresów
+      /ip firewall filter add chain=input protocol=tcp dst-port=22 src-address-list=adres action=accept
+
+    - name: Odrzuć pozostałe połączenia SSH
+      /ip firewall filter add chain=input protocol=tcp dst-port=22 action=drop
