@@ -5,7 +5,7 @@
   tasks:
     - name: Dodaj adres do listy
       raw: /ip firewall address-list add list=adres address=192.168.88.110
-      
+
     - name: Dodaj drugi adres do listy
       raw: /ip firewall address-list add list=adres address=11.11.11.12
 
