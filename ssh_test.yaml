@@ -1,19 +1,31 @@
----
-- name: Konfiguracja firewall na Mikrotikach
-  hosts: all          # obejmuje wszystkie hosty z inventory
+- name: Konfiguracja firewall na Mikrotikach przez SSH (expect)
+  hosts: mikrotik
   gather_facts: no
+  vars:
+    mikrotik_user: admin
+    # Zalecam umieścić hasło w cudzysłowie; jeśli używasz ansible-vault -> jeszcze lepiej.
+    mikrotik_pass: "JC3WROCN4W"
+    # timeout w sekundach dla expect
+    expect_timeout: 30
+
   tasks:
-    - name: Dodaj adres do listy
-      raw: /ip firewall address-list add list=adres address=192.168.88.110
+    - name: Wykonaj serię poleceń RouterOS przez SSH używając expect
+      expect:
+        command: ssh -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null {{ mikrotik_user }}@{{ inventory_hostname }}
+        responses:
+          # dopasowujemy zarówno "Password:" jak i "password:" — używamy fragmentu 'assword:' jako regexp
+          'assword:': "{{ mikrotik_pass }}"
+          # dopasowujemy prompt MikroTik (np. [admin@MikroTik] > ) — prosty regexp dla linii z ] >
+          '\[.*\]\s*>': |
+            /ip firewall address-list add list=adres address=192.168.88.110
+            /ip firewall address-list add list=adres address=11.11.11.12
+            /ip firewall filter add chain=input connection-state=established,related action=accept
+            /ip firewall filter add chain=input protocol=tcp dst-port=22 src-address-list=adres action=accept
+            /ip firewall filter add chain=input protocol=tcp dst-port=22 action=drop
+            quit
+        timeout: "{{ expect_timeout }}"
+      register: expect_out
 
-    - name: Dodaj drugi adres do listy
-      raw: /ip firewall address-list add list=adres address=11.11.11.12
-
-    - name: Akceptuj połączenia established i related
-      raw: /ip firewall filter add chain=input connection-state=established,related action=accept
-
-    - name: Akceptuj SSH tylko z listy adresów
-      raw: /ip firewall filter add chain=input protocol=tcp dst-port=22 src-address-list=adres action=accept
-
-    - name: Odrzuć pozostałe połączenia SSH
-      raw: /ip firewall filter add chain=input protocol=tcp dst-port=22 action=drop
+    - name: Pokaż wynik (opcjonalnie)
+      debug:
+        var: expect_out.stdout_lines
