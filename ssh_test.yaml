@@ -1,15 +1,31 @@
 ---
-- name: Konfiguracja firewall na Mikrotikach
-  hosts: all          # obejmuje wszystkie hosty z inventory
+- name: MikroTik configuration via AWX
+  hosts: all
   gather_facts: no
+  connection: local
+
   tasks:
-    - name: Dodaj adres do listy
-      raw: /ip firewall address-list add list=adres address=192.168.88.110
-    - name: Dodaj drugi adres do listy
-      raw: /ip firewall address-list add list=adres address=11.11.11.12
-    - name: Akceptuj połączenia established i related
-      raw: /ip firewall filter add chain=input connection-state=established,related action=accept
-    - name: Akceptuj SSH tylko z listy adresów
-      raw: /ip firewall filter add chain=input protocol=tcp dst-port=22 src-address-list=adres action=accept
-    - name: Odrzuć pozostałe połączenia SSH
-      raw: /ip firewall filter add chain=input protocol=tcp dst-port=22 action=drop
+    - name: Add IP address to address-list
+      ansible.builtin.command: >
+        /ip firewall address-list add list=adres address=192.168.88.110
+      become: false
+
+    - name: Add second IP to address-list
+      ansible.builtin.command: >
+        /ip firewall address-list add list=adres address=11.11.11.12
+      become: false
+
+    - name: Accept established and related connections
+      ansible.builtin.command: >
+        /ip firewall filter add chain=input connection-state=established,related action=accept
+      become: false
+
+    - name: Add TCP rule to accept SSH from address list
+      ansible.builtin.command: >
+        /ip firewall filter add chain=input protocol=tcp dst-port=22 src-address-list=nazwa
+      become: false
+
+    - name: Add TCP rule to drop other SSH attempts
+      ansible.builtin.command: >
+        /ip firewall filter add chain=input protocol=tcp dst-port=22 action=drop
+      become: false
