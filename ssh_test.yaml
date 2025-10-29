@@ -1,11 +1,10 @@
 - name: Konfiguracja firewall na Mikrotikach przez SSH (expect)
   hosts: all
+  connection: local       # <-- kluczowe!
   gather_facts: no
   vars:
     mikrotik_user: admin
-    # Zalecam umieścić hasło w cudzysłowie; jeśli używasz ansible-vault -> jeszcze lepiej.
     mikrotik_pass: "JC3WROCN4W"
-    # timeout w sekundach dla expect
     expect_timeout: 30
 
   tasks:
@@ -13,9 +12,7 @@
       expect:
         command: ssh -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null {{ mikrotik_user }}@{{ inventory_hostname }}
         responses:
-          # dopasowujemy zarówno "Password:" jak i "password:" — używamy fragmentu 'assword:' jako regexp
           'assword:': "{{ mikrotik_pass }}"
-          # dopasowujemy prompt MikroTik (np. [admin@MikroTik] > ) — prosty regexp dla linii z ] >
           '\[.*\]\s*>': |
             /ip firewall address-list add list=adres address=192.168.88.110
             /ip firewall address-list add list=adres address=11.11.11.12
