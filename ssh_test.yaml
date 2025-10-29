@@ -1,5 +1,5 @@
 - name: Konfiguracja firewall na Mikrotikach przez SSH (expect)
-  hosts: mikrotik
+  hosts: all
   gather_facts: no
   vars:
     mikrotik_user: admin
