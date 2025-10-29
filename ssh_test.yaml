@@ -4,16 +4,12 @@
   gather_facts: no
   tasks:
     - name: Dodaj adres do listy
-      /ip firewall address-list add list=adres address=192.168.88.110
-
+      raw: /ip firewall address-list add list=adres address=192.168.88.110
     - name: Dodaj drugi adres do listy
-      /ip firewall address-list add list=adres address=11.11.11.12
-
+      raw: /ip firewall address-list add list=adres address=11.11.11.12
     - name: Akceptuj połączenia established i related
-      /ip firewall filter add chain=input connection-state=established,related action=accept
-
+      raw: /ip firewall filter add chain=input connection-state=established,related action=accept
     - name: Akceptuj SSH tylko z listy adresów
-      /ip firewall filter add chain=input protocol=tcp dst-port=22 src-address-list=adres action=accept
-
+      raw: /ip firewall filter add chain=input protocol=tcp dst-port=22 src-address-list=adres action=accept
     - name: Odrzuć pozostałe połączenia SSH
-      /ip firewall filter add chain=input protocol=tcp dst-port=22 action=drop
+      raw: /ip firewall filter add chain=input protocol=tcp dst-port=22 action=drop
