@@ -1,31 +1,27 @@
----
-- name: MikroTik configuration via AWX
+- name: Ustawienia MikroTik
   hosts: all
   gather_facts: no
-  connection: local
+  connection: community.routeros
 
   tasks:
-    - name: Add IP address to address-list
-      ansible.builtin.command: >
-        /ip firewall address-list add list=adres address=192.168.88.110
-      become: false
+    - name: Dodaj adres do listy adresów
+      community.routeros.api_modify:
+        resource: "/ip/firewall/address-list"
+        data:
+          list: "adres"
+          address: "192.168.88.110"
 
-    - name: Add second IP to address-list
-      ansible.builtin.command: >
-        /ip firewall address-list add list=adres address=11.11.11.12
-      become: false
+    - name: Dodaj kolejny adres do listy adresów
+      community.routeros.api_modify:
+        resource: "/ip/firewall/address-list"
+        data:
+          list: "adres"
+          address: "11.11.11.12"
 
-    - name: Accept established and related connections
-      ansible.builtin.command: >
-        /ip firewall filter add chain=input connection-state=established,related action=accept
-      become: false
-
-    - name: Add TCP rule to accept SSH from address list
-      ansible.builtin.command: >
-        /ip firewall filter add chain=input protocol=tcp dst-port=22 src-address-list=nazwa
-      become: false
-
-    - name: Add TCP rule to drop other SSH attempts
-      ansible.builtin.command: >
-        /ip firewall filter add chain=input protocol=tcp dst-port=22 action=drop
-      become: false
+    - name: Dodaj filtr wejściowy - established/related
+      community.routeros.api_modify:
+        resource: "/ip/firewall/filter"
+        data:
+          chain: "input"
+          connection-state: "established,related"
+          action: "accept"
