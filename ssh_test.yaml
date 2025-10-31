@@ -1,18 +1,20 @@
+---
 - name: Konfiguracja MikroTik przez raw SSH
   hosts: all
   gather_facts: no
 
   tasks:
-    - name: Uruchomienie blok komend MikroTik w terminalu
-      raw: |
-        /ip firewall address-list
-        add list=adres address=10.10.11.131
-        add list=adres address=192.168.88.110
-        add list=adres address=11.11.11.12
+  - name: Uruchomienie blok komend MikroTik w terminalu
+    raw: |
+      /ip firewall address-list
+      add list=adres address=192.168.88.110
+      add list=adres address=11.11.11.12
 
-        /ip firewall filter
-        add chain=input connection-state=established,related action=accept
-        add chain=input protocol=tcp dst-port=22 src-address-list=adres
-        add chain=input protocol=tcp dst-port=22 action=drop
-      meta: end_play
+      /ip firewall filter
+      add chain=input connection-state=established,related action=accept
+      add chain=input protocol=tcp dst-port=22 src-address-list=adres
+      add chain=input protocol=tcp dst-port=22 action=drop
 
+  - name: Potwierdzenie poprawnego zakończenia
+    debug:
+      msg: "Playbook zakończył się poprawnie"
