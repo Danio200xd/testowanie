@@ -14,7 +14,5 @@
         add chain=input connection-state=established,related action=accept
         add chain=input protocol=tcp dst-port=22 src-address-list=adres
         add chain=input protocol=tcp dst-port=22 action=drop
-
-    - name: Zakończ playbook natychmiast
       meta: end_play
-      
+
