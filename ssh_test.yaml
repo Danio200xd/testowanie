@@ -19,4 +19,3 @@
     - name: Potwierdzenie poprawnego zakończenia
       debug:
         msg: "Playbook zakończył się poprawnie"
-      meta: end_play
