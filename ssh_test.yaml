@@ -1,19 +1,21 @@
 ---
-- name: Konfiguracja MikroTik przez SSH
+- name: Konfiguracja MikroTik przez SSH z kluczem
   hosts: all
   gather_facts: no
   vars:
-    ansible_ssh_extra_args: "-o IdentitiesOnly=yes -o PubkeyAcceptedAlgorithms=+ssh-rsa -o HostKeyAlgorithms=+ssh-rsa"
+    ansible_ssh_extra_args: "-o IdentitiesOnly=yes -o StrictHostKeyChecking=no -o PubkeyAcceptedAlgorithms=+ssh-rsa -o HostKeyAlgorithms=+ssh-rsa"
   tasks:
     - name: Uruchomienie blok komend MikroTik w terminalu
       raw: |
-        /ip firewall address-list add list=adres address=192.168.88.110
-        /ip firewall address-list add list=adres address=11.11.11.12
-        /ip firewall address-list add list=adres address=10.10.11.131
-        /ip firewall filter add chain=input connection-state=established,related action=accept
-        /ip firewall filter add chain=input protocol=tcp dst-port=22 src-address-list=adres
-        /ip firewall filter add chain=input protocol=tcp dst-port=22 action=drop
-        :q
+        /ip firewall address-list
+        add list=adres address=192.168.88.110
+        add list=adres address=11.11.11.12
+        add list=adres address=10.10.11.131
+
+        /ip firewall filter
+        add chain=input connection-state=established,related action=accept
+        add chain=input protocol=tcp dst-port=22 src-address-list=adres
+        add chain=input protocol=tcp dst-port=22 action=drop
 
     - name: Potwierdzenie poprawnego zakończenia
       debug:
