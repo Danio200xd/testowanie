@@ -1,3 +1,4 @@
+---
 - name: Konfiguracja MikroTik przez raw SSH
   hosts: all
   gather_facts: no
