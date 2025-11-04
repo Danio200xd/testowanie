@@ -8,6 +8,7 @@
      -o IdentitiesOnly=yes
      -o StrictHostKeyChecking=no
      -o HostKeyAlgorithms=+ssh-rsa
+     -o PubkeyAcceptedAlgorithms=+ssh-rsa
 
   tasks:
     - name: Uruchomienie blok komend MikroTik w terminalu
