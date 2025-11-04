@@ -2,8 +2,8 @@
 - name: Konfiguracja MikroTik przez SSH z kluczem
   hosts: all
   gather_facts: no
-vars:
-    ansible_ssh_extra_args: "-o IdentitiesOnly=yes -o StrictHostKeyChecking=no -o PubkeyAcceptedAlgorithms=+ssh-rsa -o KeyAlgorithms=+ssh-rsa"
+  vars:
+      ansible_ssh_extra_args: "-o IdentitiesOnly=yes -o StrictHostKeyChecking=no -o PubkeyAcceptedAlgorithms=+ssh-rsa -o KeyAlgorithms=+ssh-rsa"
   tasks:
     - name: Uruchomienie blok komend MikroTik w terminalu
       raw: |
