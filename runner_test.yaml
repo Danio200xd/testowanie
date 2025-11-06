@@ -1,0 +1,5 @@
+- hosts: all
+  tasks:
+    - name: Show SSH key presence
+      ansible.builtin.command: ls -la /runner/.ssh/
+      ignore_errors: yes
